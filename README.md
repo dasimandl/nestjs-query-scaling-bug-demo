@@ -1,3 +1,53 @@
+
+## Performance results:
+
+NOTE: This was conducted by incrementally uncommenting the resolvers and imports from NestjsQueryGraphQLModule in the demo.module.ts file. The data below was gathered by saving to trigger a reload three times and doing a mental average/rounding.
+
+1. docker-compose up -d (spin up db)
+2. npm run start:dev
+3. Update the demo.module.ts file (noted above) then save to trigger reload
+4. Check the console for the performance load time
+
+
+Count   (Resolvers) | Load Time (ms) | change (ms)
+-- | -- | --
+0 | 150 | -
+1 | 200 | 50
+5 | 400 | 200
+10 | 750 | 350
+15 | 1000 | 250
+20 | 1200 | 200
+25 | 1450 | 250
+30 | 1650 | 200
+35 | 1850 | 200
+40 | 2100 | 250
+45 | 2350 | 250
+50 | 2600 | 250
+55 | 2750 | 150
+60 | 3000 | 250
+65 | 3300 | 300
+70 | 3650 | 350
+83 | 4500 | 850
+
+
+
+
+## Command line script used to generate multiple files
+```{bash}
+(for i in {0..80..1}
+  do
+     cat insertion-orders.entity.ts | gsed "s/InsertionOrders/InsertionOrders$i/g" | tee ./insertion-orders.entity$i.ts
+ done)
+```
+## Command line script to extract all class names from generated files
+```{bash}
+find . -name "insertion-orders*" |sort  |while read fname; do
+  cat $fname | grep -oE "[[:space:]]InsertionOrders[^[:space:]]+" | >> output.txt
+done
+```
+
+
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p>
